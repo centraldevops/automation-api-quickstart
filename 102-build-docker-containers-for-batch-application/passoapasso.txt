@@ -1,0 +1,27 @@
+* Divino Anderson
+Baixar: git clone https://github.com/controlm/automation-api-quickstart.git
+Utilizar a pasta: /opt/automation-api-quickstart-master/102-build-docker-containers-for-batch-application/centos7-agent
+
+https://www.youtube.com/watch?v=4m_drFhyQeo
+
+Criando imagem para CENTOS7-AGENT
+
+SRC_DIR=.
+CONTROLM_HOST=192.168.126.9
+CTM_USER=workbench
+CTM_PASSWORD=workbench
+docker build --tag=controlm:v1 \
+--build-arg CTMHOST=$CONTROLM_HOST \
+--build-arg USER=$CTM_USER \
+--build-arg PASSWORD=$CTM_PASSWORD $SRC_DIR
+
+Criando containner apartir da imagem 
+
+CTM_SERVER=192.168.126.5 
+CTM_HOSTGROUP=dockertest
+CTM_AGENT_PORT=7031
+docker run --net host \
+  -v /tmp/:/home/controlm/ctm/sysout \
+  -e CTM_SERVER=$CTM_SERVER \
+  -e CTM_HOSTGROUP=$CTM_HOSTGROUP \
+  -e CTM_AGENT_PORT=$CTM_AGENT_PORT -dt controlm:new

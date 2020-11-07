@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: controlm-agent-deployment
+  labels:
+    app: controlm-agent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: controlm-agent
+  template:
+    metadata:
+      labels:
+        app: controlm-agent
+    spec:
+      volumes:
+        - name: pv-data
+          persistentVolumeClaim:
+           claimName: pvc-controlm
+      containers:
+      - name: controlm-agent
+        image: controlm:v1
+        imagePullPolicy: Never
+        env:
+        - name: CTM_SERVER
+          value: "192.168.126.9"
+        - name: CTM_HOSTGROUP
+          value: "dockertest"
+        - name: CTM_AGENT_PORT
+          value: "8443"
+        - name: PERSISTENT_VOL
+          value: "/data/controlm/files"
+        volumeMounts:
+          - mountPath: "/data/controlm/files"
+            name: pv-data  
+        command: 
+        - /data/controlm/files/exec.sh 
